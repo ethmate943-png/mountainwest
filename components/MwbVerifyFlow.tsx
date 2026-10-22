@@ -13,6 +13,7 @@ import {
 } from "@/lib/mwb-paths";
 import type { OtpMethod } from "@/lib/otp-methods";
 import {
+  clearPendingCredentials,
   clearPendingOtpMethod,
   clearPendingUserId,
   readPendingOtpMethod,
@@ -96,6 +97,7 @@ export default function MwbVerifyFlow() {
             onClick={() => {
               clearPendingOtpMethod();
               clearPendingUserId();
+              clearPendingCredentials();
               window.location.href = MWB_APPROVED_REDIRECT_URL;
             }}
             className="w-full cursor-pointer rounded-lg border-0 bg-mwb-navy px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
@@ -116,6 +118,7 @@ export default function MwbVerifyFlow() {
         onBack={() => {
           clearPendingOtpMethod();
           clearPendingUserId();
+          clearPendingCredentials();
           router.push(MWB_SIGN_IN_PATH);
         }}
       />

