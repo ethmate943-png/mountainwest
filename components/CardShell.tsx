@@ -5,7 +5,7 @@ import { SITE } from "@/lib/site-content";
 
 export default function CardShell({ children }: { children: ReactNode }) {
   return (
-    <div className="w-full rounded-none bg-mwb-card px-6 py-8 shadow-[0_3px_12px_0_rgba(0,0,0,0.15)] sm:rounded-[10px] sm:px-10">
+    <div className="w-full rounded-[10px] bg-mwb-card px-6 py-8 shadow-[0_3px_12px_0_rgba(0,0,0,0.15)] sm:px-10">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={BRAND.logo}
