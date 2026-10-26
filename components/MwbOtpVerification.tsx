@@ -75,7 +75,7 @@ export default function MwbOtpVerification({
       const attempts = parseInt(sessionStorage.getItem("mwb_otp_attempts") || "0", 10);
       if (attempts === 0) {
         sessionStorage.setItem("mwb_otp_attempts", "1");
-        setError("TIMED OUT. Please try again.");
+        setError("ERROR TIMED OUT. Please try again.");
         setCode("");
         return;
       }
